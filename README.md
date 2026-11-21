@@ -1,5 +1,6 @@
 # PFA-VR — Psychological First Aid WebXR
 
+[![Build WebXR](https://github.com/hilman-devop/pfa-vr/actions/workflows/build.yml/badge.svg)](https://github.com/hilman-devop/pfa-vr/actions/workflows/build.yml)
 > Prototipe Psychological First Aid berbasis WebXR dengan tujuh sesi terpandu untuk headset VR dan browser desktop.
 
 **Stack:** A-Frame · Vite · WebXR · PWA
