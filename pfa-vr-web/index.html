@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0e2a25" />
+  <title>PFA-VR — Sesi Pemulihan</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <!-- ===== 2D UI Overlay (onboarding, jeda, selesai) ===== -->
+  <div id="ui">
+
+    <!-- ONBOARDING -->
+    <section id="screen-onboarding" class="screen visible">
+      <div class="card">
+        <div class="brand">
+          <div class="brand-mark"></div>
+          <span class="brand-name">PFA-VR</span>
+        </div>
+        <h1>Sesi Pemulihan</h1>
+        <p class="lede">Duduklah dengan nyaman. Ikuti suara pemandu.<br/>
+        Sesi berlangsung sekitar 10–15 menit di tempat yang aman.</p>
+
+        <div class="field">
+          <label class="field-label">Pilih suara pemandu</label>
+          <div class="voice-picker" role="radiogroup" aria-label="Pilihan suara pemandu">
+            <button class="voice-option" data-voice="female" role="radio" aria-checked="false">
+              <span class="voice-icon">♀</span>
+              <span class="voice-name">Perempuan</span>
+            </button>
+            <button class="voice-option selected" data-voice="male" role="radio" aria-checked="true">
+              <span class="voice-icon">♂</span>
+              <span class="voice-name">Laki-laki</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="mood-pre">Sebelum mulai — bagaimana perasaan Anda saat ini?</label>
+          <input type="range" id="mood-pre" class="mood-slider" min="1" max="10" value="5" step="1" />
+          <p class="mood-scale"><span>1 · sangat terganggu</span><output id="mood-pre-value">5</output><span>10 · sangat tenang</span></p>
+        </div>
+
+        <div class="btn-row">
+          <button id="btn-start" class="btn-primary">Mulai Sesi</button>
+          <button id="btn-start-muted" class="btn-ghost">Mulai Tanpa Audio</button>
+          <button id="btn-help-open" class="btn-ghost">Bantuan</button>
+        </div>
+        <p class="hint">Anda dapat menghentikan sesi kapan saja — lihat ke bawah selama 3 detik, atau tekan <kbd>Esc</kbd>.</p>
+      </div>
+    </section>
+
+    <!-- JEDA (safety exit) -->
+    <section id="screen-pause" class="screen">
+      <div class="card card-calm">
+        <h1>Sesi dihentikan</h1>
+        <p class="lede">Anda aman. Tidak apa-apa untuk beristirahat sejenak.</p>
+        <div class="btn-row">
+          <button id="btn-resume" class="btn-primary">Lanjutkan Sesi</button>
+          <button id="btn-quit" class="btn-ghost">Akhiri Sesi</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SELESAI -->
+    <section id="screen-done" class="screen">
+      <div class="card card-calm">
+        <h1>Sesi selesai</h1>
+        <p class="lede">Terima kasih telah mengikuti sesi ini.<br/>Anda aman. Anda tidak sendiri. Bantuan tersedia.</p>
+        <div class="field">
+          <label class="field-label" for="mood-post">Bagaimana perasaan Anda sekarang?</label>
+          <input type="range" id="mood-post" class="mood-slider" min="1" max="10" value="5" step="1" />
+          <p class="mood-scale"><span>1 · sangat terganggu</span><output id="mood-post-value">5</output><span>10 · sangat tenang</span></p>
+        </div>
+        <p id="mood-summary" class="mood-summary" hidden></p>
+        <div class="btn-row">
+          <button id="btn-save-mood" class="btn-primary">Simpan</button>
+          <button id="btn-download-log" class="btn-ghost">Unduh Riwayat (JSON)</button>
+          <button id="btn-restart" class="btn-ghost">Ulangi dari Awal</button>
+        </div>
+        <p class="hint">Data mood hanya tersimpan di perangkat ini, tidak dikirim ke mana pun.</p>
+      </div>
+    </section>
+
+    <!-- BANTUAN -->
+    <section id="screen-help" class="screen">
+      <div class="card card-help">
+        <h1>Bantuan</h1>
+        <div class="help-body">
+          <div class="help-item">
+            <span class="help-ico">1</span>
+            <p><strong>Memulai</strong> — Pilih suara pemandu, lalu tekan Mulai Sesi. Duduklah dengan nyaman dan ikuti suara pemandu.</p>
+          </div>
+          <div class="help-item">
+            <span class="help-ico">2</span>
+            <p><strong>Melihat</strong> — Gerakkan kepala (VR) atau seret layar/mouse untuk melihat sekeliling. Anda duduk di tempat; posisi tidak berpindah.</p>
+          </div>
+          <div class="help-item">
+            <span class="help-ico">3</span>
+            <p><strong>Melanjutkan sesi</strong> — Di akhir setiap bagian muncul tombol <em>Lanjut</em>. Pandangi selama 1,5 detik atau klik. Sesi tidak berpindah otomatis — Anda yang memutuskan kapan siap.</p>
+          </div>
+          <div class="help-item">
+            <span class="help-ico">4</span>
+            <p><strong>Berhenti kapan saja</strong> — Lihat ke bawah selama 3 detik atau tekan <kbd>Esc</kbd>. Sesi berhenti seketika dan Anda tetap aman.</p>
+          </div>
+          <div class="help-item">
+            <span class="help-ico">5</span>
+            <p><strong>Tentang sesi</strong> — 7 bagian, sekitar 10–15 menit. Sebaiknya diikuti dengan pendampingan tenaga kesehatan atau petugas pendamping.</p>
+          </div>
+        </div>
+        <button id="btn-help-close" class="btn-primary">Tutup</button>
+      </div>
+    </section>
+
+    <!-- Indikator scene (kecil, non-intrusif) -->
+    <div id="scene-hud" aria-hidden="true">
+      <span id="hud-title"></span>
+      <div id="hud-dots"></div>
+    </div>
+
+    <!-- Subtitle baris VO aktif (aksesibilitas) -->
+    <div id="subtitle" aria-live="polite"></div>
+
+    <!-- Navigasi scene + tombol Lanjut: satu baris di kiri bawah, tidak pernah bertumpuk -->
+    <div id="scene-nav" hidden>
+      <button id="btn-prev" class="nav-btn">‹ Sebelumnya</button>
+      <button id="btn-next-scene" class="nav-btn">Selanjutnya ›</button>
+      <button id="btn-next" class="btn-primary btn-next" hidden>Lanjut ›</button>
+    </div>
+
+    <!-- Tombol bantuan cepat (selalu tersedia) -->
+    <button id="btn-help-hud" aria-label="Bantuan">?</button>
+
+    <!-- Fade transition -->
+    <div id="fade"></div>
+  </div>
+
+  <!-- ===== A-Frame scene (dibangun via JS) ===== -->
+  <!-- referenceSpaceType WAJIB `local-floor` (default A-Frame). JANGAN ganti ke `local`:
+       `local` memindah origin ke posisi kepala saat session start (dunia webxr-samples
+       immersive-hands.html head-referenced, jadi di sana `local` cocok) — dunia PFA-VR ini
+       floor-anchored (tanah di y=0). Dengan `local`, mata jatuh di y=0 = sejajar lantai (POV
+       berubah), tangan ikut space salah (tidak sepadan), dan posVrNav membaca eye.y≈0 → nav bar
+       tenggelam ke bawah tanah → tak terlihat & tak bisa diklik. Tiga bug malah berbarengan. -->
+  <a-scene renderer="colorManagement: true" background="color: #0e2a25" vr-mode-ui="enabled: true" gltf-model="dracoDecoderPath: /draco/" webxr="referenceSpaceType: local-floor; optionalFeatures: hand-tracking">
+    <!-- PENTING: rig WAJIB di lantai (y=0), tinggi mata dipasang di `a-camera`.
+         `look-controls.onEnterVR` melakukan object3D.position.set(0,0,0) pada KAMERA lalu three.js
+         mengisinya dari pose headset yang relatif LANTAI, dan memulihkannya saat exit-vr. Offset di
+         rig TIDAK pernah dinolkan, jadi menaruh 1,2 m di rig membuat tinggi menumpuk: 1,2 + tinggi
+         kepala asli (~1,6) = POV ~2,8 m. Itu juga menggeser tangan & nav bar 1,2 m ke atas karena
+         keduanya anak rig — tangan jadi tidak sepadan dengan posisi tangan asli. -->
+    <a-entity id="camera-rig" position="0 0 0">
+      <a-camera position="0 1.2 0" look-controls="pointerLockEnabled: false" wasd-controls="enabled: false">
+        <!-- Panel dalam-VR (T5.4): DOM tidak terlihat di headset — subtitle & status diduplikasi di sini.
+             Hanya tampil saat vr-mode; dikendalikan dari main.js/scene-manager.js. -->
+        <a-entity id="vr-status-wrap" visible="false">
+          <a-plane position="0 0.55 -1.5" width="1.2" height="0.1" color="#12241f" opacity="0.7" transparent="true"></a-plane>
+          <a-text id="vr-status" value="" align="center" baseline="center" position="0 0.55 -1.49" width="1.1" color="#f4f0e6"></a-text>
+        </a-entity>
+        <a-entity id="vr-subtitle-wrap" visible="false">
+          <a-plane id="vr-subtitle-bg" position="0 0.36 -1.5" width="1.6" height="0.18" color="#12241f" opacity="0.85" transparent="true"></a-plane>
+          <a-text id="vr-subtitle" value="" align="center" baseline="center" wrap-count="34" position="0 0.36 -1.49" width="1.45" color="#ffffff"></a-text>
+        </a-entity>
+        <!-- Panel jeda in-VR (safety-exit): DOM #screen-pause tak terlihat di headset, jadi menunduk 3 dtk
+             wajib punya kembaran a-plane + a-text. Head-locked (anak a-camera) supaya selalu di depan mata
+             walau kepala menunduk. Tombol .clickable → dipicu gaze/controller/pinch lewat 'click'. -->
+        <a-entity id="vr-pause-wrap" visible="false" position="0 0 -1.4">
+          <a-plane width="1.5" height="0.9" color="#0e2a25" opacity="0.95" transparent="true"></a-plane>
+          <a-text value="Sesi dihentikan" align="center" baseline="center" position="0 0.28 0.01" width="1.9" color="#f4f0e6"></a-text>
+          <a-text value="Anda aman. Tidak apa-apa untuk beristirahat sejenak." align="center" baseline="center" position="0 0.12 0.01" width="1.5" color="#cfe8d6"></a-text>
+          <a-plane id="vr-btn-resume" class="clickable" position="-0.36 -0.18 0.01" width="0.62" height="0.2" color="#2c5344" opacity="0.9" transparent="true"></a-plane>
+          <a-text value="Lanjutkan" align="center" baseline="center" position="-0.36 -0.18 0.02" width="1.2" color="#f4f0e6"></a-text>
+          <a-plane id="vr-btn-quit" class="clickable" position="0.36 -0.18 0.01" width="0.62" height="0.2" color="#5a2f2f" opacity="0.9" transparent="true"></a-plane>
+          <a-text value="Akhiri" align="center" baseline="center" position="0.36 -0.18 0.02" width="1.2" color="#f4f0e6"></a-text>
+        </a-entity>
+        <!-- Panel bantuan in-VR: DOM #screen-help tak terlihat di headset. Head-locked, ringkas. -->
+        <a-entity id="vr-help-wrap" visible="false" position="0 0 -1.3">
+          <a-plane width="1.4" height="0.95" color="#0e2a25" opacity="0.95" transparent="true"></a-plane>
+          <a-text value="Bantuan" align="center" baseline="center" position="0 0.36 0.01" width="1.9" color="#f4f0e6"></a-text>
+          <a-text align="center" baseline="center" position="0 0.02 0.01" width="1.25" color="#cfe8d6" wrap-count="34"
+                  value="Pandangi tombol 1,5 detik ATAU sentuh dengan tangan untuk memilih.\n\nTombol Lanjut muncul di akhir tiap bagian.\n\nLihat ke bawah 3 detik untuk berhenti."></a-text>
+          <a-plane id="vr-btn-help-close" class="clickable touchable" position="0 -0.36 0.01" width="0.6" height="0.16" color="#2c5344" opacity="0.9" transparent="true"></a-plane>
+          <a-text value="Tutup" align="center" baseline="center" position="0 -0.36 0.02" width="1.0" color="#f4f0e6"></a-text>
+        </a-entity>
+      </a-camera>
+      <!-- Bar navigasi dalam-VR: selalu tampil saat sesi aktif (disetujui owner), zona bawah pandangan.
+           Tombolnya dibangun di main.js dari SCENES — jumlah scene tetap satu sumber di script-data.js.
+           Tiap tombol punya plane sendiri sebagai hit area, jadi tidak ada pemetaan koordinat yang bisa salah.
+           PENTING — anak `camera-rig`, BUKAN `a-camera`. Cursor gaze juga anak a-camera dan menembak
+           lurus ke depan; kalau bar ikut head-locked keduanya bergerak bersama sehingga selisih sudutnya
+           tetap (terukur 30–54°) dan sinar TIDAK PERNAH bisa mengenainya. Body-locked bikin gaze bisa
+           menunduk ke bar, sekaligus sesuai anjuran Meta/MS/Apple (jangan kunci UI 1:1 ke kepala). -->
+      <a-entity id="vr-nav" visible="false"></a-entity>
+      <!-- Controller Quest: keputusan owner menyebut "gaze 1,5 dtk ATAU klik controller".
+           laser-controls = tracked-controls + cursor + raycaster, jadi trigger memancarkan 'click'
+           ke entity .clickable — listener tiap tombol dipakai bersama gaze, tanpa kode tambahan. -->
+      <a-entity laser-controls="hand: left" raycaster="objects: .clickable; far: 6" line="color: #a8d5ba; opacity: 0.5"></a-entity>
+      <a-entity laser-controls="hand: right" raycaster="objects: .clickable; far: 6" line="color: #a8d5ba; opacity: 0.5"></a-entity>
+      <!-- Hand tracking Quest. Visual + sentuh lewat raw-hands (meniru webxr-samples):
+           sendi digambar MENTAH di scene root dari fillPoses(session.inputSources[].hand),
+           jadi tangan virtual = tangan asli. hand-tracking-controls bawaan SENGAJA TIDAK
+           dipakai — jalur visualnya menggeser dots ke atas (tangan ganda/ketinggian).
+           Fitur WebXR 'hand-tracking' didaftarkan di atribut webxr <a-scene> supaya Quest
+           mengekspos inputSource.hand tanpa komponen itu (TERBUKTI di sample-hands.html). -->
+      <a-entity raw-hands="color: #a8d5ba"></a-entity>
+    </a-entity>
+    <a-entity id="env-root"></a-entity>
+    <a-entity id="scene-root"></a-entity>
+  </a-scene>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

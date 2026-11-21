@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uji Tangan — meniru webxr-samples</title>
+  <script type="module" src="/src/hand-test.js"></script>
+</head>
+<body>
+  <!-- Halaman uji hand tracking terisolasi. Meniru webxr-samples/immersive-hands:
+       tangan (dots) + kotak yang berubah warna saat disentuh ujung telunjuk.
+       Tujuan: cek apakah tangan virtual = tangan asli di Quest-mu, tanpa gangguan
+       environment/scene utama. reference space diuji lewat ?space=local | local-floor. -->
+  <a-scene background="color: #101018" vr-mode-ui="enabled: true">
+    <a-entity id="rig" position="0 0 0">
+      <a-camera position="0 1.2 0" look-controls="pointerLockEnabled: false"></a-camera>
+    </a-entity>
+    <!-- Tangan digambar MENTAH via raw-hands (fillPoses + reference space renderer),
+         di scene root, TANPA hand-tracking-controls. Persis jalur webxr-samples. -->
+    <a-entity raw-hands></a-entity>
+    <a-box class="touch-box" position="-0.2 1.1 -0.35" depth="0.06" width="0.12" height="0.12" color="#8888aa"></a-box>
+    <a-box class="touch-box" position="0 1.2 -0.4" depth="0.06" width="0.12" height="0.12" color="#8888aa"></a-box>
+    <a-box class="touch-box" position="0.2 1.1 -0.35" depth="0.06" width="0.12" height="0.12" color="#8888aa"></a-box>
+    <a-plane rotation="-90 0 0" width="6" height="6" color="#20202c"></a-plane>
+  </a-scene>
+</body>
+</html>
